@@ -1,2 +1,8 @@
-/target
+*.swo
+*.sw[mnop]
+*.vim
+todo.txt
 Cargo.lock
+/ignore
+/target
+
