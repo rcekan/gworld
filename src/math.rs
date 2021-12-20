@@ -1,18 +1,5 @@
 pub use std::f32::consts::PI;
 
-pub fn modulo_radians( theta:f32 ) -> f32 {
-    let mut t2 = theta;
-    if (theta < 0.0) | (theta > (2.0 * PI)) {
-        let c = f32::floor( f32::abs(theta) / (2.0 * PI) );
-        if theta < 0.0 {
-            t2 += 2.0 * PI * (c+1.0);
-        } else { 
-            t2 -= 2.0 * PI * c;
-        }
-    }
-    return t2
-}
-
 // I feel like these are way too "bunchy". 
 // Like, I'll get stuck at far ends for d. 
 // What I want is something linear, but that's scaled by an amount relative to my canvas. 
