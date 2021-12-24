@@ -1,4 +1,4 @@
-// A library providing genetic-inspired breeding algorithms. 
+// A library providing genetically-inspired breeding algorithms. 
 
 // now all other modules can access following through crate/super
 pub mod math;
