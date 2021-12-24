@@ -1,11 +1,15 @@
 use super::genes::Genome; // we need pub here to re-export, right?
 use super::brains::Brain;
 use super::{math, Creature};
-// pub mod math;
 
 // Is there some way to make this whole fuckin file pub(crate), while letting the regular pub override that where noted?
 
+// enum ReproductionType { 
+// 	BUDDING,
+// }
+
 pub struct Organism <T:Creature> { 
+	// pub environs: &'a E,
 	pub alive: bool,
 	pub age: usize,
 	pub(crate) offspring: usize,
@@ -29,12 +33,17 @@ impl <T:Creature> Organism <T> {
 
 	pub(crate) fn from_genome( genome :Genome ) -> Self {
 		Self {
+			//environs: env,
 			brain: Brain::new( &genome ), // need to build brain first appartently (oh rust)
 			genome, 
 			creature: T::init(),
 
 			alive: true, age: 0, offspring: 0, max_fitness: 0.,
 		}
+	}
+
+	pub(crate) fn bud( &self ) -> Self {
+		return Self::from_genome( self.genome.bud() )
 	}
 
 	pub(crate) fn age( &mut self, steps :usize ) {

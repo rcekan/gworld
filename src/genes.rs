@@ -1,4 +1,4 @@
-use super::{Node, NodeType};
+use super::node::{Node, NodeType};
 use super::config::Config;
 use rand::Rng; 
 // mod Node; // can I just use NodeType down below now? 

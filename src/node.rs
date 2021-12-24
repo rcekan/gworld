@@ -21,10 +21,10 @@ impl PartialEq for Node {
 
 impl Node {
     // fn idx(&self) -> usize { self.idx as usize }
-    fn is_hidden(&self) -> bool { matches!(self.node_type, NodeType::HIDDEN) }
-    fn is_input(&self) -> bool { matches!(self.node_type, NodeType::INPUT) }
-    fn is_output(&self) -> bool { matches!(self.node_type, NodeType::OUTPUT) }
-    pub fn get_name(&self) -> String {
+    pub(crate) fn is_hidden(&self) -> bool { matches!(self.node_type, NodeType::HIDDEN) }
+    pub(crate) fn is_input(&self) -> bool { matches!(self.node_type, NodeType::INPUT) }
+    pub(crate) fn is_output(&self) -> bool { matches!(self.node_type, NodeType::OUTPUT) }
+    pub(crate) fn get_name(&self) -> String {
 		Config::get().node_name( self )
     }
 }

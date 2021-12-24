@@ -1,4 +1,4 @@
-use super::Node;
+use super::node::Node;
 use super::genes::{Gene, Genome};
 use super::config::Config;
 
