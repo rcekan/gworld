@@ -8,6 +8,9 @@ pub struct World<E:Environs, T:Creature> {
 	fertile :Vec<usize>, // usize indexes into self.organisms 
 }
 
+// At one point, we were have trouble passing ownership of environs to the library, 
+// And the trait allowed us to create our own copy in World::new()
+// ... but not so sure it's needed anymore. Seems cumbersome and somewhat unnecessary. 
 pub trait Environs {
 	type Creature;
 	// process_result returns the fitness value!! Could make a type Fitness possibly...
