@@ -1,0 +1,14 @@
+
+
+		// Maybe wait until we have a certain pool size of them, and then they can reproduce. 
+		// Or perhaps they become "fertile". 
+		// And then we look for fertile partners. 
+		// So during it's during test_fitness, which turns on their fertility? 
+		// In this way, if something is picked twice, then I suppose it's fertility score goes up?
+		// And then when it finds a chance to reproduce, 
+		// It does so at the next opportunity. 
+		// But perhaps it should wait for a compatible partner? 
+		// Ugh, am I overthinking this? Does any body care? 
+		// Okay, we pick the winners, and now they need to reproduce. 
+		// Maybe people want to change the way winners are picked. There could be a default method. 
+		// Or the user could provide their own. Why not? 

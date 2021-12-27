@@ -1,0 +1,34 @@
+# Chromosomes
+
+Match them. 
+
+For breeding purposes.
+
+For instance, 
+
+"Hey you, I got good results myself (good enough to reproduce, on avg)
+ with a few similar chromosome to you. We should reproduce." 
+
+If the other accepts, (lol, acceptance could be a genetic variable where some breeds are more specific in their requirements. )
+(or rather more likely for now, they will automatically mate if they're in the breeding pool together. 
+
+Perhaps the criteria could be less stringent the fewer organisms in the breeding pool. 
+
+
+## matching strategies
+
+### Group the outputs
+Seems like the most obvious way to do things. 
+But not straightforward how one would mix/match the genes together. 
+Would need to work on this. It just doesn't seem obvious if gains would be worth our time spent. 
+
+
+## hidden nuron inter-dependence? 
+
+So, within a chromosome, there's the possibility that one chromosome's hidden neurons could be mapped independently from other chromosome's hidden neurons. 
+Reason: Perhaps this would yield less "cross-over noise" when using chromosal breeding techniques. 
+
+It seems interesting, but it seems like it might introduce some constraints that slow evolution. 
+Then again, the whole point would be for it to add evolution, and help chromosomes play a larger role in mating and performance. 
+
+

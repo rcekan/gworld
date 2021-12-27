@@ -1,0 +1,29 @@
+
+	// no more expunge dead is necessary. We are reclaiming the bodies. It's inefficient anyway. 
+	// But we need to move this disuccssion to the "finding new index" function for new creatures
+	// Okay sure, when they insert into the vector. If there are any dead ones at the front, but it there. 
+	// Otherwise create a new one. What's the harm? There will eventually be one in the front. 
+	// This way, we keep our dead around until it gets re-incarnated. O(1) time. Lol. 
+//	fn expunge_dead(&mut self) {
+//		'check_front: for (id, genome) in self.genomes.iter().enumerate() {
+//			if !self.genome.alive { // we'll pop the dead ones off the front (of the 3 parallel vectors)
+//				// really we should stash it somewhere. Like in a "dead" list. 
+//				// ultimately, we want to see the peak output. Right? ... [tbd: docs/deliverables.txt]
+//				// regardless, new process: The body gets reclaimed 
+//
+//				if genome.age > 2*Config::get().lifespan {
+//					// Do we need a mutex here to make sure these things need to be done together? 
+//					// ... see, this is why I think creature (and brain) should be in a pub Genome struct. 
+//					//{ // still might want a mutex for accessing the genome... ??? That is far off though, needing that feature, and implementing. Lol. 
+//						self.genomes.erase( self.genomes.begin() );
+//						self.brains.erase( self.brains.begin() );
+//						self.creatures.erase( self.creatures.begin() );
+//					//}
+//				}
+//
+//			} else { // until we find an alive one. 
+//				break 'check_front; // and remove the rest later when it's more convenient to do so
+//			}
+//		}
+//	}
+

@@ -24,7 +24,7 @@ impl Config {
 	}
 
 	// Something just seems wrong here... whatever. I hate this BS myself. But what can you do other than pass around config everywhere?? (which I'm not going to do.)
-	pub(crate) fn get() -> Config { 
+	pub fn get() -> Config { 
 		(*CONFIG.lock().unwrap()).clone()
 	}
 

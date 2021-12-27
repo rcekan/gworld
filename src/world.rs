@@ -10,52 +10,34 @@ pub struct World<E:Environs, T:Creature> {
 
 pub trait Environs {
 	type Creature;
-	fn inputs_for( &mut self, creature :&Self::Creature ) -> bool;
-	fn init() -> Self;
+	// process_result returns the fitness value!! Could make a type Fitness possibly...
+	// fn process_result( &mut self, creature :Self::Creature ) -> f32;
+	fn new() -> Self;
 }
 
 pub trait Creature {
-	fn init() -> Self;
-	fn calc_input(&self, input :&str) -> f32;
-	fn handle_output(&mut self, output :&str, value :f32);
-	fn process_result(&mut self);
-	fn fitness(&self) -> f32; // , world :&World<T>) -> f32; 
+	type Env; // user supplied environment
+	fn new(env :&mut Self::Env) -> Self;
+	fn rx_input(&self, input :&str, env :&Self::Env) -> f32;
+	fn tx_output(&mut self, output :&str, value :f32, env :&Self::Env);
+	fn act(&mut self, env :&mut Self::Env) -> f32; // returns fitness
 	
-	fn to_die<T:Creature>(&self, org :&Organism<T>) -> bool { 
-		org.age > Config::get().lifespan
+	// fn process_result(&mut self);
+	// fn get_fitness(&mut self);
+	
+	fn to_die(&self, age :usize, _env :&mut Self::Env) -> bool { 
+		age > Config::get().lifespan
 		// ultimately, might want it some probability based on a continuous fit-function derivative. 
 	}
 }
 
-impl <E:Environs<Creature = T>, T:Creature> World<E,T> {
+impl <E:Environs<Creature = T>, T:Creature<Env = E>> World<E,T> {
 	pub fn new() -> Self {
+		let mut env = E::new();
 		Self { 
-			organisms: (0..Config::get().population).map(|_| Organism::new() ).collect(), 
-			environs: E::init(), 
+			organisms: (0..Config::get().population).map(|_| Organism::new( &mut env ) ).collect(), 
+			environs: env,
 			fertile: Vec::new(),
-		}
-	}
-
-	fn birth(&mut self, org :Organism<T>) {
-		let mut reclaim = -1; // Check for "dead" body
-		for (id, org) in self.organisms.iter().enumerate() {
-			if !org.alive {
-				// remove it from the fertility pool (if needed). You snooze you lose. 
-				// self.fertile.remove( self.fertile.iter().position(|x| *x == id).unwrap() );
-
-				// and then reclaim the body
-				reclaim = id as isize;
-				break;
-			}
-		}
-		
-		// Overwrite the "dead" organism
-		if reclaim >= 0 { 
-			let id = reclaim as usize;
-			self.organisms[id] = org;
-		} else { 
-		// Or add it to the end. 
-			self.organisms.push( org );
 		}
 	}
 
@@ -86,7 +68,7 @@ impl <E:Environs<Creature = T>, T:Creature> World<E,T> {
 			// We'll just cap reproduction at population size.
 			for id in 0 .. self.organisms.len() { // iter().enumerate() {
 				// if !genome.alive { continue }
-				self.independent_steps( id, &steps );
+				self.i_steps( id, &steps );
 			}
 			self.reproduce(&steps);
 		} else {
@@ -101,52 +83,29 @@ impl <E:Environs<Creature = T>, T:Creature> World<E,T> {
 		}
 	}
 
-	fn independent_steps( &mut self, id :usize, steps :&usize ) {
+	// not gonna lie, this doesn't really help much, in terms of speed. Maybe just delete it?
+	// It's possible it helps more with very large population sizes, and more complete computations (for fitness, acting, etc)
+	fn i_steps( &mut self, id :usize, steps :&usize ) {
 		let org = &mut self.organisms[id];
-		if !org.alive { return (); } // sanity check
 
-		'step_loop: for _s in 0..*steps {
-			org.get_inputs();
-			org.process_inputs();
-			org.set_outputs();
-			
-			org.creature.process_result();
-			org.max_fitness = f32::max( org.max_fitness, org.creature.fitness() );
-
-			org.age( 1 ); // note: Death may occur from this process. 
-			if !org.alive { break 'step_loop; };
-
-			// self.environs.inputs_for( &org.creature ); // testing
+		for _s in 0..*steps {
+			if !org.alive { break; };
+			org.take_step( &mut self.environs );
+			// Note, one would think you could abstract all these steps in org possibly... 
 		}
 	}
 	
 	// Efficiency concern: If objects are independent of each other in the environment, 
 	// We can compute all steps at once for one creature, in memory, without fear of thrashing/swapping between the potential 1000's of creatures in our environment for each step. 
-	// more: [docs/independence-efficiency.txt]
+	// [Ref: docs/independence-efficiency.txt]
 
 	fn step(&mut self) {
-		// first collect the inputs
-        for org in self.organisms.iter_mut() {
-			if !org.alive { continue; }
-			org.get_inputs( );
-		}
-
-		// now compute the outputs (and do stuff)
+		// now compute the outputs and act (TODO: let's do this in order of most fit)
 		for org in self.organisms.iter_mut() {
 			if !org.alive { continue; }
-
-			org.process_inputs(); // also squashes inner nodes
-			org.set_outputs();
-			org.creature.process_result();
-
-			// and update max_fitness while we're here: 
-			org.max_fitness = f32::max( org.max_fitness, org.creature.fitness() );
+			org.take_step( &mut self.environs );
         }
 
-		// And finally time to die
-		for org in self.organisms.iter_mut() {
-			org.age( 1 );
-		}
 		// self.expunge_dead(); // [see: docs/expunge.txt]
 	}
 
@@ -210,19 +169,40 @@ impl <E:Environs<Creature = T>, T:Creature> World<E,T> {
 		}
 
 		if Config::log("low") { println!( "Winners: {:?}", &self.fertile ); }
-
-		if self.fertile.len() < 1 { return (); }
 		
 		// great, we have some babies to make!
 		while self.fertile.len() > 0 {
 			if let Some(id) = self.fertile.pop() {
 				self.organisms[id].offspring += 1;
-				let org = self.organisms[id].bud();
+				let org = self.organisms[id].bud( &mut self.environs );
 				// let env = self.organisms[id].environs; // pass along environs
 				self.birth( org );
 			}
 		} // consider better reproduction strats! [see: docs/repro.txt]
 		
+	}
+
+	fn birth(&mut self, org :Organism<T>) {
+		let mut reclaim = -1; // Check for "dead" body
+		for (id, org) in self.organisms.iter().enumerate() {
+			if !org.alive {
+				// remove it from the fertility pool (if needed). You snooze you lose. 
+				// self.fertile.remove( self.fertile.iter().position(|x| *x == id).unwrap() );
+
+				// and then reclaim the body
+				reclaim = id as isize;
+				break;
+			}
+		}
+		
+		// Overwrite the "dead" organism
+		if reclaim >= 0 { 
+			let id = reclaim as usize;
+			self.organisms[id] = org;
+		} else { 
+		// Or add it to the end. 
+			self.organisms.push( org );
+		}
 	}
 }
 
