@@ -14,7 +14,7 @@ pub use config::Config;
 
 #[cfg(test)]
 mod tests { // Yeah I need to do this. 
-    #[test] // Anybody want to take a stab at it? Code testing is highly desirable for interviews I've found. wink wink
+    #[test] // Anybody want to take a stab at it? Code testing is highly desirable for interviews I've heard. wink wink
     fn it_works() {
         let result = 2 + 2;
         assert_eq!(result, 4);

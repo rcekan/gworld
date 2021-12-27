@@ -1,0 +1,23 @@
+	// Efficiency concern: If objects are independent of each other in the environment, 
+	// We can compute all steps at once for one creature, in memory, without fear of thrashing/swapping between the potential 1000's of creatures in our environment for each step. 
+	// more: [docs/independence-efficiency.txt]
+	// Because eventually there will be so many objects, large structures start swapping in and out of memory too much. 
+	// It will slow things down.
+	// In our case there's an image to maintain. I guess we can do the tests. 
+	// This ought to be fun... 
+	// (first though, painting and results!)
+
+	// The problem occurs when the outputs of something affect the inputs of the next. 
+	// So if all canvases are independent, no problem. 
+	// But if creatures, then they need to thinkin about each other.
+	// Do we really need that though? I mean, the "collusions" and mutual responses are interesting...
+	// But do we want to get bogged down in things? Can't we just keep it simple, 
+	// Organism is independent on it's own, And then a more complex organism can evolve ... 
+	// Although it really with interacting, you get another level of complexity squared or something. 
+	// So ultimately evolution algorithms should run in some parallel way where
+	// all organisms have their own independent processing machines. 
+	// Right? Is that like fpga shit? Of course this is another level than we're trying to focus right now...
+	// Except for the fact that doing this one organism at a time will be wayyy more efficient me-thinks. \
+	
+	// It complicates the reproduction scheme of course, and continuous fit function, but I think we can deal with it. And still make the general case work. 
+

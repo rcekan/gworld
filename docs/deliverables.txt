@@ -1,0 +1,23 @@
+Library usage: 
+
+It's like, I want to get output at any time. 
+
+When is the best time to get output? 
+
+How can we make the library to facilitate this ergonomically?
+
+I think there should somehow be a "best performance list". 
+
+And in that list, we could do a few things. 
+It's almost like there need to be some deliverable. Right?
+Isn't that what we usually care about? 
+
+Some kind of deliverable? 
+It just seems there are so many genetic algorithms one could think of. 
+How to
+ a) Try to account for a variety (all????) of them
+ b) And/or, how to make the library adaptable, so people can make it do what they need. 
+
+I think it all comes down to the "live" function. 
+Along with "step"
+
