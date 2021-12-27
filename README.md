@@ -1,16 +1,16 @@
 # gworld
 Rust library for genetic algorithms
 
-## current state
-The library is working. 
-
+## Usage tips
 [world.rs](./src/world.rs) defines the primary objects/traits. 
 
-Note, a "functional" chromosome is defined as a collection of genes that describe a full path from input to output. Ultimately, the idea is that breeding algorithms may be enhanced by mating organisms with similar chromosomal makeup. 
+World contains 1 environment and many creatures, which you will define via the Environs and Creature traits, respectively. 
+
+When setting the config, a "functional" chromosome is defined as a collection of genes that describe a full path from input to output. Ultimately, the idea is that breeding algorithms may be enhanced by mating organisms with similar chromosomal makeup. 
 
 ## Example
 
-Haven't test this yet, but usage will look something like: 
+Haven't test this yet, but usage looks something like: 
 
 ```rust
 use gworld::{math, World, Config, Environs, Creature};
@@ -30,8 +30,9 @@ fn main() {
 	});
 
 	let mut world :World<MyEnv, Blob> = World::new(); 
-	world.live(); // world.environs.best is now populated
-	
+	world.live(); 
+	// world.environs to access MyEnv structure
+	// world.organisms[i].creature to access Blob creatures
 }
 
 struct MyEnv {}
