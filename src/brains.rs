@@ -34,7 +34,7 @@ impl Brain {
 			// let's only look at sources (arbitrary, could have selective sinks) 
 			if gene.source.is_hidden() & gene.active {
 				// Ignore if it's already been added to nurons
-				for nuron in nurons.iter() { // vs just "... in nurons"? 
+				for nuron in nurons.iter() { 
 					if nuron.node == gene.source {
 						continue 'find_nuron;
 					}
@@ -76,7 +76,7 @@ impl Brain {
 				let node = gene.sink; // & is not necessary here because Node is copyable, right? 
 				
 				// Ignore if it's already been added to outputs
-				for output in outputs.iter() { // vs just "... in nurons"? 
+				for output in outputs.iter() { 
 					if output.node == node {
 						continue 'find_output;
 					}
@@ -114,10 +114,6 @@ impl Brain {
 		print_nurons( "Neurons", &self.nurons );
 		print_nurons( "Outputs", &self.outputs );		
 		fn print_nurons( title: &str, nurons: &Vec<Nuron> ) {
-			// for the life of me, can't figure out how to print the vector of Nurons, using the above Display fn
-			// Problem is, when I derive Debug for Nuron, it doesn't want to use the Display fn, maybe because it's not debug info?
-			// So in this case, we probably have to derive a "debug" display clause, but it doesn't make sense to me, why they should be different. 
-			// See this is the problem with Rust, ... just things like this (printing vec, of struct object with custom Display), are like, just not possible? And that's okay? Why? Who made this decision? I don't think I'm okay with it. :/ 
 			print!("{}:", title);
 			for nuron in nurons.iter() { print!("{}", nuron); }
 			println!(" END");

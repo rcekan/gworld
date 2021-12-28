@@ -71,7 +71,7 @@ impl <T:Creature> Organism <T> {
 	// may cause death (is steps really necessary??)
 	fn age( &mut self, steps :usize, env :&mut T::Env ) {
 		self.age += steps;
-		if self.creature.to_die( self.age, env ) {
+		if self.creature.die( self.age, env ) {
 			self.alive = false;
 		}
 	}

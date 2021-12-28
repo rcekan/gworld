@@ -1,0 +1,6 @@
+// Note: Not entirely sure this object is still needed. 
+// At one point, we were have trouble passing ownership of environs to the library, 
+// And the trait allowed us to create our own copy in World::new()
+
+Currently seems a little cumbersome. However, I think it makes sense for the world to keep it's own copy of an environment object. The alternative would be to pass the environment as a reference into all the world functions, like new and run, etc, and the user would retain full control of the environs object. 
+

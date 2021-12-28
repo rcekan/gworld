@@ -8,13 +8,8 @@ pub struct World<E:Environs, T:Creature> {
 	fertile :Vec<usize>, // usize indexes into self.organisms 
 }
 
-// At one point, we were have trouble passing ownership of environs to the library, 
-// And the trait allowed us to create our own copy in World::new()
-// ... but not so sure it's needed anymore. Seems cumbersome and somewhat unnecessary. 
-pub trait Environs {
+pub trait Environs { // [See: docs/environs.txt]
 	type Creature;
-	// process_result returns the fitness value!! Could make a type Fitness possibly...
-	// fn process_result( &mut self, creature :Self::Creature ) -> f32;
 	fn new() -> Self;
 }
 
@@ -25,12 +20,9 @@ pub trait Creature {
 	fn tx_output(&mut self, output :&str, value :f32, env :&Self::Env);
 	fn act(&mut self, env :&mut Self::Env) -> f32; // returns fitness
 	
-	// fn process_result(&mut self);
-	// fn get_fitness(&mut self);
-	
-	fn to_die(&self, age :usize, _env :&mut Self::Env) -> bool { 
+	// let user redefine. Might want to make it some probability based on fitness and/or age, etc. 
+	fn die(&self, age :usize, _env :&mut Self::Env) -> bool { 
 		age > Config::get().lifespan
-		// ultimately, might want it some probability based on a continuous fit-function derivative. 
 	}
 }
 
@@ -107,8 +99,7 @@ impl <E:Environs<Creature = T>, T:Creature<Env = E>> World<E,T> {
 		for org in self.organisms.iter_mut() {
 			if !org.alive { continue; }
 			org.take_step( &mut self.environs );
-        }
-
+		}
 		// self.expunge_dead(); // [see: docs/expunge.txt]
 	}
 
@@ -121,7 +112,7 @@ impl <E:Environs<Creature = T>, T:Creature<Env = E>> World<E,T> {
 	// The fraction of the population that was depleted during these steps (based on avg_life)
 	fn offspring_needed(&self, steps :&usize) -> usize {
 		let mut needed = (steps * Config::get().population ) as f32 / self.avg_life();
-        let mut rng = rand::thread_rng();
+		let mut rng = rand::thread_rng();
 
 		// fraction determines probability of additional child.
 		let fraction = needed - needed.floor();

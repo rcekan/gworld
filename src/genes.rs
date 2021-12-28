@@ -1,7 +1,6 @@
 use super::node::{Node, NodeType};
 use super::config::Config;
 use rand::Rng; 
-// mod Node; // can I just use NodeType down below now? 
 
 #[derive(Copy, Clone)]
 pub(crate) struct Gene {
@@ -82,18 +81,11 @@ impl Gene {
 	}
 }
 
-impl Gene { // not sure where to put this function. Auxilary really. 
-	fn set_active_genes(genes :&mut Vec<Gene>) { // genome:&mut [Gene] ) {
-		//const NODE_COUNT:usize = 24;
-		//let mut sourcing = [false; NODE_COUNT];
-		//let mut sinking = [false; NODE_COUNT]; // we could just copy sourcing... but how to copy array?
-
+impl Gene { 
+	fn set_active_genes(genes :&mut Vec<Gene>) { // not sure where to put this function. Auxilary really. 
 		let mut sourcing = vec![false; Config::get().node_count()]; // create dense vectors 
 		let mut sinking = vec![false; Config::get().node_count()]; // to help us keep track of nodes that are potentially sourcing or sinking signals.
 		let mut hidden_edges = Vec::new();
-
-		//for chro in self.chromos.iter() {
-		//	for g in chro.genes.iter() {
 
 		for g in genes.iter() {
 			// find all the DIRECT sources. 
@@ -137,8 +129,6 @@ impl Gene { // not sure where to put this function. Auxilary really.
 
 		// Now that we have all sinking and sourcing genes, we can use a little logic, 
 		// To activate all genes connected to a source or sink.
-		//for chro in self.chromos.iter_mut() {
-		//	for g in chro.genes.iter_mut() {
 		for g in genes.iter_mut() { 
 			g.active = false;
 			if matches!(g.source.node_type, NodeType::INPUT) & 
@@ -191,7 +181,7 @@ impl Chromo {
 		return chromo
 	}
 
-	// return a mutate copy of ourself
+	// return a mutated copy of ourself
 	fn mutate(&self) -> Self { 
 		// Let's have one mutation per chromosome (for now)
         let mut rng = rand::thread_rng();
@@ -263,7 +253,6 @@ impl Genome {
 	// Asexual reproduction method, creates a mutated clone
 	pub fn bud(&self) -> Self {
 		// First let's build the chromosomes
-
 		let mut chromos = Vec::new();
 		for chro in self.chromos.iter() {
 			chromos.push( chro.mutate() );
