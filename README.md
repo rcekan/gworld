@@ -94,7 +94,7 @@ Ultimately, the idea is to use chromosomes to enhance breeding, perhaps explore 
 
 The goal is for the library to take out all the boilerplate work when setting up a genetic algorithm. 
 
-I've personally used to create a painting algorithm, and I plan to reproduce an example that mimics the work done in this video:
+I've currently used it to create a painting algorithm, and I plan to reproduce an example that mimics the work done in this video:
 [I programmed some creatures. They Evolved.](https://www.youtube.com/watch?v=N3tRFayqVtk&t=1392s)
 
 I also had this creation in mind, when creating the code. I can't say for sure whether gwould could be used to create something like this, but I think it could get close, and hopefully will evolve to have the capability. 
@@ -104,6 +104,7 @@ The whole idea is that the `act` method mutates the environment. That is likely 
 
 Ultimately, it would be interesting to have multiple species evolving, perhaps with different fit functions. In this case, maybe it would be a matter of renaming "World" to "Species", and then you would create multiple species that all reference the same environment, such that they can interact. 
 
-So much to do. So little time. 
+So much to do. So little time. I'll continue using it for personal projects and add to it as needed. 
 
-If you're using the library and have a feature request and/or would like to contribute, I'd love to hear from you (I guess notify me `@rcekan`, with an issue, is that the only way?)
+If you're using the library and have a feature request and/or would like to contribute, I'd love to hear from you!
+(I guess notify me `@rcekan` with an issue, is that the only way?)
