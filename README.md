@@ -10,10 +10,10 @@ Rust library for genetic algorithms
 
 ## Example
 
-It doesn't do much, but it evolves (and compiles). More complex example to come. Stay tuned. (Or lmk if you would like to contribute one!)
+It doesn't do much, but it evolves. I will post a more complex example soon hopefully.
 
 ```rust
-rust:examples/blob.rs
+examples/blob.rs
 ```
 
 ```rust
