@@ -1,12 +1,12 @@
 # gworld
 Rust library for genetic algorithms
 
-## Usage tips
+## Usage notes
 - [world.rs](./src/world.rs) defines the primary objects/traits. 
 
 - World contains 1 environment and many creatures, which you will define via the Environs and Creature traits. 
 
-- When setting the config, a "functional" chromosome is defined as a collection of genes that describe a full path from input to output. Ultimately, the idea is that breeding algorithms may be enhanced by mating organisms with similar chromosomal makeup. 
+- When setting the config, a "functional" chromosome is defined as a collection of genes that describe a full path from input to output. It is coupled with mutation rate at the moment, and keeping `use_chromo` set to `true` will reduce mutation rate. 
 
 ## Example
 
@@ -85,3 +85,25 @@ impl Creature for Blob {
 	}
 }
 ```
+
+## Future work
+
+The breeding is currently super basic. Asexual, and one bit-swap mutation per chromosome. 
+
+Ultimately, the idea is to use chromosomes to enhance breeding, perhaps explore diploid (tri, n-ploid) mating strategies. 
+
+The goal is for the library to take out all the boilerplate work when setting up a genetic algorithm. 
+
+I've personally used to create a painting algorithm, and I plan to reproduce an example that mimics the work done in this video:
+[I programmed some creatures. They Evolved.](https://www.youtube.com/watch?v=N3tRFayqVtk&t=1392s)
+
+I also had this creation in mind, when creating the code. I can't say for sure whether gwould could be used to create something like this, but I think it could get close, and hopefully will evolve to have the capability. 
+[How I created an evolving neural network ecosystem](https://www.youtube.com/watch?v=myJ7YOZGkv0)
+
+The whole idea is that the `act` method mutates the environment. That is likely where the meat and bones of your creature behaviors will go. 
+
+Ultimately, it would be interesting to have multiple species evolving, perhaps with different fit functions. In this case, maybe it would be a matter of renaming "World" to "Species", and then you would create multiple species that all reference the same environment, such that they can interact. 
+
+So much to do. So little time. 
+
+If you're using the library and have a feature request and/or would like to contribute, I'd love to hear from you (I guess notify me `@rcekan`, with an issue, is that the only way?)
