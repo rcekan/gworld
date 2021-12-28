@@ -21,7 +21,7 @@ pub trait Creature {
 	fn act(&mut self, env :&mut Self::Env) -> f32; // returns fitness
 	
 	// let user redefine. Might want to make it some probability based on fitness and/or age, etc. 
-	fn die(&self, age :usize, _env :&mut Self::Env) -> bool { 
+	fn die(&self, age :usize, _fitness :f32, _env :&mut Self::Env) -> bool { 
 		age > Config::get().lifespan
 	}
 }
