@@ -51,6 +51,7 @@ struct Blob {
 
 impl Creature for Blob {
 	type Env = MyEnv;
+	
 	fn new( env: &mut Self::Env ) {
 		Self { // may want to generate x, y from env data
 			x: 10,
