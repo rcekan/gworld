@@ -102,7 +102,7 @@ I also had this creation in mind, when creating the code. I can't say for sure w
 
 The whole idea is that the `act` method mutates the environment. That is likely where the meat and bones of your creature behaviors will go. 
 
-Ultimately, it might be interesting to have multiple species evolving, perhaps with different fit functions. More on this in [docs/multiple-species.txt](./docs/multiple-species.txt).
+Ultimately, it might be interesting to have multiple species evolving, perhaps with different fit functions. More on this in [docs/multiple-species.txt](./docs/multi-species.txt).
 
 So much to do. So little time. I'll continue using it for personal projects and add to it as needed. 
 
