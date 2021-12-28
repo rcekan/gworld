@@ -1,0 +1,28 @@
+From the README:
+"Ultimately, it would be interesting to have multiple species evolving, perhaps with different fit functions. In this case, maybe it would be a matter of renaming "World" to "Species", and then you would create multiple species that all reference the same environment, such that they can interact."
+
+I'm not so sure this would be a good approach, or if it would be even possible with Rust. How would one set up an array of species to mutate? I could imagine an approach in python. Where it's an array of a super-type. 
+
+But with Rust? Would there be a way to say, I'm going to use N different structs, each with their own implementation of the Creature trait. 
+Here are all the structs. Please set them up and handle them for me, to interact with the same environment. 
+
+It just doesn't seem trivial to me. 
+
+I think it you want multiple species, perhaps that would occur under your breeding algorithm. 
+
+It brings up the question, what is a "species"? Things that can reproduce with each other?
+Can different species have different fit-functions? Or is that just a misunderstanding of animals and plants? We all have the fit-function of survive and create, no?
+
+-----------
+
+# multiple fit-functions
+
+Soooo.... maybe you just define multiple fit-functions? 
+And then various "species" will evolve for each fit-function. 
+
+I don't know. It's weird. This probably will never happen, but it's interesting to think about nonetheless. 
+
+If you're working on an environment and you have a specific use case for multiple species, let me know! Maybe we can find a good solution. 
+
+
+
