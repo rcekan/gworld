@@ -4,7 +4,7 @@ Rust library for genetic algorithms
 ## Usage notes
 - [world.rs](./src/world.rs) defines the primary objects/traits. 
 
-- `World` contains 1 environment and many creatures, which you will define via the Environs and Creature traits. 
+- `World` contains 1 environment and many creatures, which you will define via the `Environs` and `Creature` traits. 
 
 - When setting the config, a "functional" chromosome is defined as a collection of genes that describe a full path from input to output. It is coupled with mutation rate at the moment, and keeping `use_chromo` set to `true` will reduce mutation rate. 
 
