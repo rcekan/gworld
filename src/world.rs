@@ -74,7 +74,7 @@ impl <E:Environs<Creature = T>, T:Creature<Env = E>> World<E,T> {
 		}
 		
 		if Config::log("on") {
-			println!("Processing {} steps. {}, {}", &steps, self.sum_fitness(), self.max_fitness() );
+			println!("Processing {} steps. sum_fit {}, max_fit {}", &steps, self.sum_fitness(), self.max_fitness() );
 		}
 	}
 
