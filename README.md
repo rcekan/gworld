@@ -14,8 +14,6 @@ It doesn't do much, but it evolves. I will post a more complex example soon hope
 
 [examples/blobs.rs](./examples/blobs.rs)
 
-```rust:./examples/blobs.rs```
-
 ```rust
 use gworld::{math, World, Config, Environs, Creature};
 
