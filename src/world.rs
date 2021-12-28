@@ -74,7 +74,7 @@ impl <E:Environs<Creature = T>, T:Creature<Env = E>> World<E,T> {
 		}
 		
 		if Config::log("on") {
-			println!("Processing {} steps. sum_fit {}, max_fit {}", &steps, self.sum_fitness(), self.max_fitness() );
+			println!("Processing {} steps. sum/max: {}, {}", &steps, self.sum_fitness(), self.max_fitness() );
 		}
 	}
 
@@ -176,27 +176,21 @@ impl <E:Environs<Creature = T>, T:Creature<Env = E>> World<E,T> {
 		
 	}
 
-	fn birth(&mut self, org :Organism<T>) {
-		let mut reclaim = -1; // Check for "dead" body
+	fn birth(&mut self, baby :Organism<T>) {
+		// Check for "dead" body
 		for (id, org) in self.organisms.iter().enumerate() {
-			if !org.alive {
+			if !org.alive & !self.fertile.contains(&id) {
 				// remove it from the fertility pool (if needed). You snooze you lose. 
 				// self.fertile.remove( self.fertile.iter().position(|x| *x == id).unwrap() );
 
-				// and then reclaim the body
-				reclaim = id as isize;
-				break;
+				// reclaim the body
+				self.organisms[id] = baby;
+				return ();
 			}
 		}
 		
-		// Overwrite the "dead" organism
-		if reclaim >= 0 { 
-			let id = reclaim as usize;
-			self.organisms[id] = org;
-		} else { 
 		// Or add it to the end. 
-			self.organisms.push( org );
-		}
+		self.organisms.push( baby );
 	}
 }
 
