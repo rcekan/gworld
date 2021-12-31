@@ -8,8 +8,8 @@ Rust library for genetic algorithms
 
 - When setting the config, a "functional" chromosome is defined as a collection of genes that describe a full path from input to output. It is coupled with mutation rate at the moment, and keeping `use_chromo` set to `true` will reduce mutation rate. 
 
-- The fitness value returned from `act` will affect the probability of reproduction, relative to all other fitness values. Ie: 2:1 means, twice as likely to reproduce.
-
+- The fitness value returned from `act` will affect the probability of reproduction, relative to all other fitness values. For instance, a fitness value twice as large as another, will have twice the probability to reproduce. 
+ 
 ## Example
 
 It doesn't do much, but it evolves. I will post a more complex example soon hopefully.
