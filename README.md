@@ -65,6 +65,7 @@ impl Creature for Blob {
 		return 0. // need to return a fitness value
 	}
 	
+	// calculate an input for the network, match for each node in Config.inputs
 	fn rx_input( &self, input: &str, _env: &Self::Env ) -> f32 {
 		match input {
 			"X" => self.x,
@@ -76,6 +77,7 @@ impl Creature for Blob {
 		}
 	}
 	
+	// get output from the network, match for each node in Config.outputs
 	fn tx_output( &mut self, output: &str, value: f32, _env: &Self::Env ) {
 		match output { // may want to check with env and make sure this is a valid location to move to!
 			"MOVX" => self.x = math::tanh( value ),
@@ -88,9 +90,17 @@ impl Creature for Blob {
 
 ## Future work
 
+Immediately, would like to add a multi-fit functionality. Such that breeding occurs based on multiple fit functions. Additionally would love to try and correlate chromosomes responsible for each fit-function, and enhance breeding. 
+
 The breeding is currently super basic. Asexual, and one bit-swap mutation per chromosome. 
 
-Ultimately, the idea is to use chromosomes to enhance breeding, perhaps explore diploid (tri, n-ploid) mating strategies. 
+Perhaps explore diploid (tri, n-ploid) mating strategies. 
+
+So much to do. So little time. I'll continue using it for personal projects and add to it as needed. 
+
+If you're using the library and have a feature request and/or would like to contribute, I'd love to hear from you in the Dicussion section.
+
+## More about gworld
 
 The goal is for the library to take out all the boilerplate work when setting up a genetic algorithm. 
 
@@ -101,10 +111,3 @@ I also had this creation in mind, when creating the code. I can't say for sure w
 [How I created an evolving neural network ecosystem](https://www.youtube.com/watch?v=myJ7YOZGkv0)
 
 The whole idea is that the `act` method mutates the environment. That is likely where the meat and bones of your creature behaviors will go. 
-
-Ultimately, it might be interesting to have multiple species evolving, perhaps with different fit functions. More on this in [docs/multiple-species.txt](./docs/multi-species.txt).
-
-So much to do. So little time. I'll continue using it for personal projects and add to it as needed. 
-
-If you're using the library and have a feature request and/or would like to contribute, I'd love to hear from you!
-(I guess notify me `@rcekan` with an issue, is that the only way?)
