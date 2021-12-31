@@ -99,6 +99,8 @@ The breeding is currently super basic. Asexual, and one bit-swap mutation per ch
 
 Perhaps explore diploid (tri, n-ploid) mating strategies. 
 
+I'd like to find a way to cater to a gui implementation. Possible have gworld run as a service. It's currently roll-your-own. Good luck.
+
 So much to do. So little time. I'll continue using it for personal projects and add to it as needed. 
 
 If you're using the library and have a feature request and/or would like to contribute, I'd love to hear from you in the Dicussion section.
