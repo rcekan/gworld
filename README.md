@@ -61,8 +61,9 @@ impl Creature for Blob {
 		}
 	}
 	
+	// your actions can change the world.environs
 	fn act( &mut self, _env: &mut Self::Env ) -> f32 {
-		return 0. // need to return a fitness value
+		return 0. // return a fitness value
 	}
 	
 	// calculate an input for the network, match for each node in Config.inputs
@@ -79,7 +80,7 @@ impl Creature for Blob {
 	
 	// get output from the network, match for each node in Config.outputs
 	fn tx_output( &mut self, output: &str, value: f32, _env: &Self::Env ) {
-		match output { // may want to check with env and make sure this is a valid location to move to!
+		match output { // you may wish to refer to env in your logic
 			"MOVX" => self.x = math::tanh( value ),
 			"MOVY" => self.y = math::tanh( value ),
 			_ => println!("tx_output: no match found for: {}", output ),
