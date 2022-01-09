@@ -21,10 +21,10 @@ pub struct Organism <T:Creature> {
 	pub creature :T,
 }
 
-impl <T:Creature> Organism <T> { 
+impl <T:Creature + Creature<CCT = T>> Organism <T> { 
 	pub(crate) fn new( env :&mut T::Env ) -> Self {
 		let genome = Genome::new();
-		Organism::from_genome( genome, env )
+		Organism::from_genome( genome, env, Vec::new() )
 	}
 
 	// that's fascinating.
@@ -32,12 +32,12 @@ impl <T:Creature> Organism <T> {
 	// not that the organism does. It takes 2 to reproduce, (or more!). 
 	// It's never going to work 
 
-	pub(crate) fn from_genome( genome :Genome, env :&mut T::Env ) -> Self {
+	pub(crate) fn from_genome( genome :Genome, env :&mut T::Env, parents :Vec<&T::CCT> ) -> Self {
 		Self {
 			//environs: env,
 			brain: Brain::new( &genome ), // need to build brain first appartently (oh rust)
 			genome, 
-			creature: T::new( env ),
+			creature: T::new( env, parents ),
 
 			alive: true, age: 0, offspring: 0, 
 			fitness: 0., max_fitness: 0.,
@@ -45,7 +45,9 @@ impl <T:Creature> Organism <T> {
 	}
 
 	pub(crate) fn bud( &self, env :&mut T::Env ) -> Self {
-		return Self::from_genome( self.genome.bud(), env )
+		let mut parents = Vec::new();
+		parents.push( &self.creature );
+		return Self::from_genome( self.genome.bud(), env, parents )
 	}
 
 // 	pub(crate) fn handle_result( &mut self, env :&T::Env ) {
@@ -60,7 +62,7 @@ impl <T:Creature> Organism <T> {
 	}
 
 	pub(crate) fn take_action( &mut self, env :&mut T::Env ) {
-		self.fitness = self.creature.act( env );
+		self.fitness = f32::max( 0.0001, self.creature.act( env )); // no negative fitness (for now, see note in World.reproduce)
 		self.max_fitness = f32::max( 
 			self.max_fitness, 
 			self.fitness,
@@ -71,7 +73,9 @@ impl <T:Creature> Organism <T> {
 	// may cause death (is steps really necessary??)
 	fn age( &mut self, steps :usize, env :&mut T::Env ) {
 		self.age += steps;
+		// println!("Aging: {}", self.age);
 		if self.creature.die( self.age, self.fitness, env ) {
+			// println!("Create is dieing");
 			self.alive = false;
 		}
 	}

@@ -36,9 +36,10 @@ struct Blob {
 
 impl Creature for Blob {
 	type Env = MyEnv;
+	type CCT = Self;
 	
-	fn new( _env: &mut Self::Env ) -> Self {
-		Self { // may want to generate x, y from env data
+	fn new( _env: &mut Self::Env, _parents :Vec<&Self::CCT> ) -> Self {
+		Self { // may want to generate x, y from env data, or inherit things from parents
 			x: 10.,
 			y: 10.,
 		}
