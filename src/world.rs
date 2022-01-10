@@ -85,7 +85,9 @@ impl <E:Environs<Creature = T>, T:Creature<Env=E, CCT=T>> World<E,T> {
 	}
 
 	pub fn fitness_stats(&self) -> String {
-		format!("sum_fit {}, max_fit {}", self.sum_fitness(), self.max_fitness())
+		let (max, pop) = self.max_fitness();
+		let sum = self.sum_fitness();
+		format!("Fitness( sum: {:.2}, avg: {:.2}, max: {:.2} )", sum, sum/pop, max )
 	}
 
 	// not gonna lie, this doesn't really help much, in terms of speed. Maybe just delete it?
@@ -132,13 +134,15 @@ impl <E:Environs<Creature = T>, T:Creature<Env=E, CCT=T>> World<E,T> {
 		usize::min( needed.floor() as usize, Config::get().population ) // cap it at population size
 	 }
 
-	fn max_fitness(&self) -> f32 {
+	fn max_fitness(&self) -> (f32, f32) { // don't confuse with org.max_fitness :/ 
 		let mut max = 0.;
+		let mut pop = 0.;
 		for org in self.organisms.iter() {
 			if !org.alive { continue; }
 			max = f32::max(org.max_fitness, max);
+			pop += 1.;
 		};
-		return max
+		return (max, pop)
 	}
 	
 	fn sum_fitness(&self) -> f32 {
@@ -160,7 +164,7 @@ impl <E:Environs<Creature = T>, T:Creature<Env=E, CCT=T>> World<E,T> {
 			// Pick a number, 0 - sum(org.max_fitness)
 			let num = rng.gen_range(0.0.. self.sum_fitness());
 			
-			// Then just cycle through the org.max_fitness(), 
+			// Then just cycle through the org.max_fitness, 
 			// until we find the "winner"
 			
 			let mut tot = 0.;

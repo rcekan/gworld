@@ -2,6 +2,9 @@ use std::io::stdin;
 use rand::Rng;
 use gworld::{math, World, Config, Environs, Creature};
 
+// Goal: Blob object will evolve to travel "up" (toward y=0) on the map. 
+// Press Enter to continue the execution. Ctrl-C to stop. (duh)
+
 fn main() {
 	Config::set( Config {
 		// inputs: ["DT", "DB", "DL", "DR"].iter().map(|&s| s.into()).collect(),
@@ -21,18 +24,20 @@ fn main() {
 	let mut world :World<MyEnv, Blob> = World::new(); 
 	world.environs.print();
 
-	let generations = 5;
-	for _i in 0..generations {
-		for _i in 0..Config::get().lifespan {
-			println!("{}", world.fitness_stats());
-			stdin().read_line(&mut String::new());
+	let generations = 10;
+	for i in 0..generations {
+		for j in 0..Config::get().lifespan {
+			let mut s = format!("{}", world.fitness_stats());
+			if i==0 && j==0 { s = format!("{} -- Press <Enter> to continue.", s); }
+			println!("{}", s);
+			stdin().read_line(&mut String::new()).ok(); 
 			world.advance(1); // will advance the world #lifespan steps 
 			world.environs.print();
 		}
 	}
 }
 
-const DIM :usize = 8; // Dimensions for the map: DIM x DIM
+const DIM :usize = 15; // Dimensions for the map: DIM x DIM
 struct MyEnv {
 	next_name: usize,
 	map: [[(usize, usize); DIM]; DIM], // map will store name of the creature there
@@ -76,7 +81,7 @@ impl MyEnv {
 }
 
 // We'll use the environment so we can account for collisions in the act. 
-// (We'll also incidentally print from the environment.)
+// (We'll also incidentally print via the environment map.)
 // (Probably should have just printed while cyclying through world.organisms.creature objects, but oh well. Just use a tuple for map and bob's your uncle.)
 impl Environs for MyEnv {
 	type Creature = Blob;
@@ -88,25 +93,26 @@ impl Environs for MyEnv {
 	}
 }
 
+#[allow(dead_code)] // x0 not used
 struct Blob {
-	age: usize,
-	name: usize,
-	movx: f32,
+	movx: f32, // -1 to 1, probability to move in either direction
 	movy: f32,
-	x: usize,
+	x: usize, // current position
 	y: usize,
-	x0: usize,
+	x0: usize, // initial position
 	y0: usize, 
+	name: usize, // for map printing purposes
+	age: usize, // for map printing purposes
 }
 
 impl Creature for Blob {
 	type Env = MyEnv;
 	type CCT = Self;
 	
-	fn new( env :&mut Self::Env, with :Vec<&Self::CCT> ) -> Self {
+	fn new( env :&mut Self::Env, parents :Vec<&Self::CCT> ) -> Self {
 		let mut new = env.new_creature();
-		if with.len() > 0 { // inherit name of first parent (the "mom" if you will, although siblings can spawn based on ALL parents locations, so "mom" doesn't necessarily make sense any more, unless we want to provide "nourishing" functions or something of that matter. The user can do that on their end. )
-			new.name = with[0].name;
+		if parents.len() > 0 { // inherit name of first parent (the "mom" if you will, although siblings can spawn based on ALL parents locations, so "mom" doesn't necessarily make sense any more, unless we want to provide "nourishing" functions or something of that matter. The user can do that on their end. )
+			new.name = parents[0].name;
 			env.map[new.y][new.x] = (new.name, 0); // Important! Change the name in the MAP (ugh)!
 		} 
 		new
@@ -114,7 +120,7 @@ impl Creature for Blob {
 
 	fn die(&self, age :usize, _fitness :f32, env :&mut Self::Env) -> bool { 
 		if age > Config::get().lifespan {
-			env.map[ self.y ][ self.x ] = (0,0);
+			env.map[ self.y ][ self.x ] = (0,0); // remove from the environment
 			true
 		} else {
 			false
