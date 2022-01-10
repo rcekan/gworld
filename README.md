@@ -10,9 +10,11 @@ Rust library for genetic algorithms
 
 - The fitness value returned from `act` will affect the probability of reproduction, relative to all other fitness values. For instance, a fitness value twice as large as another, will have twice the probability to reproduce. 
  
-## Example
+## Example Usage
 
-It doesn't do much, but it evolves. I will post a more complex example soon hopefully.
+For an example that evolves a solution: See [examples/migrate.rs](./examples/migrate.rs)
+
+Here is a more simple example. It doesn't do much, but it does compile and run.
 
 [examples/blobs.rs](./examples/blobs.rs)
 
@@ -55,15 +57,16 @@ struct Blob {
 
 impl Creature for Blob {
 	type Env = MyEnv;
+	type CCT = Self;
 	
-	fn new( _env: &mut Self::Env ) -> Self {
-		Self { // may want to generate x, y from env data
+	fn new( _env: &mut Self::Env, _parents: Vec<&Self::CCT> ) -> Self {
+		Self { // may want to generate x, y from env data, or inherit things from parents
 			x: 10.,
 			y: 10.,
 		}
 	}
 	
-	// your actions can change the world.environs
+	// your actions can change the world.environs!
 	fn act( &mut self, _env: &mut Self::Env ) -> f32 {
 		return 0. // return a fitness value
 	}
@@ -93,17 +96,24 @@ impl Creature for Blob {
 
 ## Future work
 
-Immediately, would like to add a multi-fit functionality. Such that breeding occurs based on multiple fit functions. Additionally would love to try and correlate chromosomes responsible for each fit-function, and enhance breeding. 
+Improve the Settings handling.
 
-The breeding is currently super basic. Asexual, and one bit-swap mutation per chromosome. 
+Fix extinction issues. Currently if Settings.population is set low, and a few other factors including bad luck from the random generator, extinction may occur. You've been warned. 
 
-Perhaps explore diploid (tri, n-ploid) mating strategies. 
+Better mutations and breeding control. 
 
-I'd like to find a way to cater to a gui implementation. Possible have gworld run as a service. It's currently roll-your-own. Good luck.
+Multi-fit functionality. Select breeding to occur based on multiple fit functions. Additionally would love to try and correlate chromosomes responsible for each fit-function, and enhance breeding. 
+
+Multple parents (diploid, tri, n-ploid) mating strategies. 
+
+At least one more example. A little more complicated. Maybe migrate to 4 separate corners.
+
+More GUI friendly. Possible have gworld run as a service. It's currently roll-your-own. Good luck.
 
 So much to do. So little time. I'll continue using it for personal projects and add to it as needed. 
 
 If you're using the library and have a feature request and/or would like to contribute, I'd love to hear from you in the Dicussion section.
+
 
 ## More about gworld
 

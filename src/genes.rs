@@ -35,8 +35,24 @@ impl Gene {
 		}
 	}	
 	
-	// returns a mutated copy of self
+	// slight strength adjustment
 	pub(crate) fn mutate(&self) -> Self {
+		// print!("Before: {:X}, ", self.dna);
+		let mut rng = rand::thread_rng();
+		let r = rng.gen_range(0.8..1.2); // might want a bell curve here
+		let s = (self.dna & 0xffff) as i16 as f32;
+		let t = f32::max( i16::MIN as f32, 
+					f32::min( s * r, i16::MAX as f32 ),
+				);
+		// print!("s:{}, r:{:.2}, t:{}, i:{:x}, i32:{:x}, ", s, r, t, t as i16, t as i32);
+		let dna = (self.dna & 0xffff0000) | (0x0000ffff & t as i32 as u32);
+		// println!("After: {:X}", dna);
+
+		Gene::with_dna(dna) 
+	}
+
+	// swaps two bits
+	pub(crate) fn _mutate(&self) -> Self {
 		let mut rng = rand::thread_rng();
 		let b1 = rng.gen_range(0..32);
 		let b2 = rng.gen_range(0..32);

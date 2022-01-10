@@ -15,18 +15,24 @@ pub trait Environs { // [See: docs/environs.txt]
 
 pub trait Creature {
 	type Env; // user supplied environment
-	fn new(env :&mut Self::Env) -> Self;
+	type CCT; // user supplied creature type
+	fn new(env :&mut Self::Env, parents :Vec<&Self::CCT>) -> Self; // parents :&CCT
 	fn rx_input(&self, input :&str, env :&Self::Env) -> f32;
 	fn tx_output(&mut self, output :&str, value :f32, env :&Self::Env);
 	fn act(&mut self, env :&mut Self::Env) -> f32; // returns fitness
 	
+//	fn make_child(&self, env :&mut Self::Env, with :Vec<&Self::CCT>) -> Self;
+//	{ //, _parents :&Self::CCT) -> Self {
+//		Creature::CCT.new( env )
+//	}
+
 	// let user redefine. Might want to make it some probability based on fitness and/or age, etc. 
 	fn die(&self, age :usize, _fitness :f32, _env :&mut Self::Env) -> bool { 
 		age > Config::get().lifespan
 	}
 }
 
-impl <E:Environs<Creature = T>, T:Creature<Env = E>> World<E,T> {
+impl <E:Environs<Creature = T>, T:Creature<Env=E, CCT=T>> World<E,T> {
 	pub fn new() -> Self {
 		let mut env = E::new();
 		Self { 
@@ -74,8 +80,14 @@ impl <E:Environs<Creature = T>, T:Creature<Env = E>> World<E,T> {
 		}
 		
 		if Config::log("on") {
-			println!("Processing {} steps. sum/max: {}, {}", &steps, self.sum_fitness(), self.max_fitness() );
+			println!("Processing {} steps. {}", &steps, self.fitness_stats() );
 		}
+	}
+
+	pub fn fitness_stats(&self) -> String {
+		let (max, pop) = self.max_fitness();
+		let sum = self.sum_fitness();
+		format!("Fitness( sum: {:.2}, avg: {:.2}, max: {:.2} )", sum, sum/pop, max )
 	}
 
 	// not gonna lie, this doesn't really help much, in terms of speed. Maybe just delete it?
@@ -122,13 +134,15 @@ impl <E:Environs<Creature = T>, T:Creature<Env = E>> World<E,T> {
 		usize::min( needed.floor() as usize, Config::get().population ) // cap it at population size
 	 }
 
-	fn max_fitness(&self) -> f32 {
+	fn max_fitness(&self) -> (f32, f32) { // don't confuse with org.max_fitness :/ 
 		let mut max = 0.;
+		let mut pop = 0.;
 		for org in self.organisms.iter() {
 			if !org.alive { continue; }
 			max = f32::max(org.max_fitness, max);
+			pop += 1.;
 		};
-		return max
+		return (max, pop)
 	}
 	
 	fn sum_fitness(&self) -> f32 {
@@ -141,20 +155,22 @@ impl <E:Environs<Creature = T>, T:Creature<Env = E>> World<E,T> {
 	}
 
 	fn reproduce(&mut self, steps :&usize) {
+		let needed = self.offspring_needed( steps );
+
 		// first pick the winners of offspring lottery
         let mut rng = rand::thread_rng();
-		for _i in 0..self.offspring_needed( steps ) {
+		for _i in 0..needed { // self.offspring_needed( steps ) {
 			
 			// Pick a number, 0 - sum(org.max_fitness)
 			let num = rng.gen_range(0.0.. self.sum_fitness());
 			
-			// Then just cycle through the org.max_fitness(), 
+			// Then just cycle through the org.max_fitness, 
 			// until we find the "winner"
 			
 			let mut tot = 0.;
 			for (id, org) in self.organisms.iter().enumerate() {
 				if !org.alive { continue; }
-				tot += f32::abs(org.max_fitness);
+				tot += f32::abs(org.max_fitness); // abs: sanity check, could shift all numbers by greatest negative number... 
 				if tot >= num { // We have a winner
 					self.fertile.push( id );
 					break;
@@ -162,7 +178,7 @@ impl <E:Environs<Creature = T>, T:Creature<Env = E>> World<E,T> {
 			}
 		}
 
-		if Config::log("low") { println!( "Winners: {:?}", &self.fertile ); }
+		if Config::log("low") && needed>0 { println!( "Winners: {:?}", &self.fertile ); }
 		
 		// great, we have some babies to make!
 		while self.fertile.len() > 0 {
@@ -173,7 +189,6 @@ impl <E:Environs<Creature = T>, T:Creature<Env = E>> World<E,T> {
 				self.birth( org );
 			}
 		} // consider better reproduction strats! [see: docs/repro.txt]
-		
 	}
 
 	fn birth(&mut self, baby :Organism<T>) {

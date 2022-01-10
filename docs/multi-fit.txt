@@ -1,0 +1,17 @@
+# Multiple fit functions
+
+Consider N fit functions. 
+An n-dimensional vector to qualify fitness.
+Breeding occurs along each axis of fitness. 
+
+So if you're exceptional at one fitness, but not the others, it more than makes up for it. 
+
+Ultimately, would be interesting to see if genomes with a similar fitness makeup, also share any chromosomal similarities. 
+
+If so, we could weight their common similarities, to try to identify which chromosomes are successful for that fitness category. 
+
+
+Ultimately, I feel like we'd want larger chromosomes. Like much longer. 
+The ability for them to grow and enhance, over time. 
+
+
